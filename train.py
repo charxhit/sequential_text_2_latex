@@ -72,7 +72,9 @@ class TrainSym:
         return imgs, labels
 
     def train(self):
+        print("Loading data...")
         self.imgs, self.labels = self.load()
+        print("Data loaded")
 
         # Here x_train, y_train is the input/output for training, with input containing imgs and output having labels
         # (in latex)
@@ -90,6 +92,7 @@ class TrainSym:
         # COnvert our outputs to ndarrays
         y_train, y_test = np.array(y_train), np.array(y_test)
 
+        print("Creating model...")
         model = Sequential()
         model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(45, 45, 1)))
         model.add(MaxPool2D((2, 2)))
@@ -101,6 +104,8 @@ class TrainSym:
         model.add(Dense(79, activation='softmax'))
 
         model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+        print("Beginning training...")
         x = model.fit(x_train, y_train, epochs=self.epochs, batch_size=self.batch_size, verbose=2, validation_split=0.1)
 
         model.save(self.save_path / self.name)
