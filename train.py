@@ -31,7 +31,7 @@ class TrainSym:
 
     def _preprocess_data(self):
         # We need to convert our labels to numeric values, so we create our arrays to do that here.
-        self._labels_to_code = {label: num for num, label in enumerate(self.dir_to_label)}
+        self._labels_to_code = {self.dir_to_label[label]: num for num, label in enumerate(self.dir_to_label)}
 
     def load(self):
         while True:
@@ -64,6 +64,7 @@ class TrainSym:
                     continue
                 try:
                     img = cv2.imread(img, cv2.COLOR_BGR2GRAY)
+                    print(img)
                     imgs.append(img)
                     labels.append(value)
                 except Exception as e:
@@ -113,7 +114,9 @@ class TrainSym:
 
     @staticmethod
     def normalize_pixels(imgs):
-        return tf.keras.utils.normalize(imgs, axis=1)
+        imgs -= np.mean(imgs, axis=0)
+        imgs /= np.std(imgs, axis=0)
+        return imgs
 
 
 
